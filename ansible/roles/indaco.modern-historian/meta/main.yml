@@ -1,0 +1,18 @@
+collections:
+  - community.general
+  - community.docker
+galaxy_info:
+  author: indaco
+  description: Run the docker-compose stack on the Docker engine to provide the modern historian stack (InfluxDB, Grafana, OPC UA Server, Telegraf and Portainer).
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+  galaxy_tags:
+    - docker
+    - compose
+    - development
+    - container

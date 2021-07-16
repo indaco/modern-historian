@@ -1,0 +1,40 @@
+---
+# tasks file indaco.essentials role
+
+- name: Update apt-get repo and cache
+  become: yes
+  ansible.builtin.apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+    state: present
+  tags:
+    - packages
+
+- name: Install packages to allow apt to use a repository over HTTPS
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - lsb-release
+      - software-properties-common
+    state: present
+    update_cache: no
+  tags:
+    - packages
+
+- name: Install python3, pip, tree and jq
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+      - tree
+      - jq
+    state: present
+    update_cache: no
+  tags:
+    - packages

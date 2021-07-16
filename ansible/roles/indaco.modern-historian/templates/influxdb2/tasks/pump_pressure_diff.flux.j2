@@ -1,0 +1,42 @@
+option task = {name: "Check Pump Pressure Difference", every: 5s, offset: 1s}
+
+currentTime = now()
+pressureIn = from(bucket: "{{ influxdb_init_bucket }}")
+	|> range(start: -12h)
+	|> filter(fn: (r) =>
+		(r._measurement == "LinePerformance" and r.plant == "Plant_A" and r.phase == "Pulping" and r.machine == "Pump-97924244" and r._field == "InputPressure"))
+	|> drop(columns: ["_source_timestamp"])
+	|> mean(column: "_value")
+	|> map(fn: (r) =>
+		({
+			_time: currentTime,
+			_value: r._value,
+			plant: r.plant,
+			_measurement: "Pressure",
+		}))
+pressureOut = from(bucket: "{{ influxdb_init_bucket }}")
+	|> range(start: -12h)
+	|> filter(fn: (r) =>
+		(r._measurement == "LinePerformance" and r.plant == "Plant_A" and r.phase == "Pulping" and r.machine == "Pump-97924244" and r._field == "OutputPressure"))
+	|> drop(columns: ["_source_timestamp"])
+	|> mean(column: "_value")
+	|> map(fn: (r) =>
+		({
+			_time: currentTime,
+			_value: r._value,
+			plant: r.plant,
+			_measurement: "Pressure",
+		}))
+
+join(tables: {ip: pressureIn, op: pressureOut}, on: ["_time", "_measurement"])
+	|> map(fn: (r) =>
+		({
+			_time: r._time,
+			_pd: r._value_op - r._value_ip,
+			plant: "Plant_A",
+			phase: "Pulping",
+			machine: "Pump-97924244",
+			_measurement: "LinePerformance",
+		}))
+	|> to(bucket: "{{ influxdb_init_bucket }}", org: "{{ influxdb_init_org }}", fieldFn: (r) =>
+		({"Pressure_In_Out": r._pd}))

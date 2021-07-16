@@ -1,0 +1,15 @@
+{
+  "name": "opcua-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mirco Veltri",
+  "license": "MIT",
+  "dependencies": {
+    "node-opcua": "^2.45.0"
+  }
+}

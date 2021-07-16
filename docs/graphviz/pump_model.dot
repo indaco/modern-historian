@@ -1,0 +1,120 @@
+/** https://dreampuf.github.io/GraphvizOnline **/
+/** Author: Mirco Veltri **/
+
+digraph tree {
+  fixedsize=true;
+  node [width=2, height=0, shape=box, color="#8427E2", fillcolor="#72C9F8", style=filled, concentrate=true]
+
+  node_root [label=< <I>ObjectNode</I><BR/>Pump > fillcolor="#CD92FF"]
+
+  /****************************/
+  /*    Manufacturer Name     */
+  /****************************/
+  {
+    rank=same
+    point_1 [shape=point]
+    node_1 [label=< <I>VariableNode</I><BR/>ManufacturerName >, ]
+  }
+  node_root -> point_1 [arrowhead=none]
+  point_1 -> node_1 [label="hasComponent"]
+
+  /********************/
+  /*    Model Name    */
+  /********************/
+  {
+    rank=same
+    point_2 [shape=point]
+    node_2 [label=< <I>VariableNode</I><BR/>ModelName >]
+  }
+  point_1 -> point_2 [arrowhead=none]
+  point_2 -> node_2 [label="hasComponent"]
+
+  /***********************/
+  /*    SerialNumber     */
+  /***********************/
+  {
+    rank=same
+    point_3 [shape=point]
+    node_3 [label=< <I>VariableNode</I><BR/>SerialNumber >]
+  }
+  point_2 -> point_3 [arrowhead=none]
+  point_3 -> node_3 [label="hasComponent"]
+
+  /********************/
+  /*    StatusCode    */
+  /********************/
+  {
+    rank=same
+    point_4 [shape=point]
+    node_4 [label=< <I>VariableNode</I><BR/>StatusCode >]
+  }
+  point_3 -> point_4 [arrowhead=none]
+  point_4 -> node_4 [label="hasComponent"]
+
+  /*******************/
+  /*    FaultCode    */
+  /*******************/
+  {
+    rank=same
+    point_5 [shape=point]
+    node_5 [label=< <I>VariableNode</I><BR/>FaultCode >]
+  }
+  point_4 -> point_5 [arrowhead=none]
+  point_5 -> node_5 [label="hasComponent"]
+
+  /****************/
+  /*    Status    */
+  /****************/
+  {
+    rank=same
+    point_6 [shape=point]
+    node_6 [label=< <I>VariableNode</I><BR/>Status >]
+  }
+  point_5 -> point_6 [arrowhead=none]
+  point_6 -> node_6 [label="hasComponent"]
+
+  /******************/
+  /*    MotorRPM    */
+  /******************/
+  {
+    rank=same
+    point_7 [shape=point]
+    node_7 [label=< <I>VariableNode</I><BR/>MotorRPM >]
+  }
+  point_6 -> point_7 [arrowhead=none]
+  point_7 -> node_7 [label="hasComponent"]
+
+  /*********************/
+  /*    Temperature    */
+  /*********************/
+  {
+    rank=same
+    point_8 [shape=point]
+    node_8 [label=< <I>VariableNode</I><BR/>Temperature >]
+  }
+  point_7 -> point_8 [arrowhead=none]
+  point_8 -> node_8 [label="hasComponent"]
+
+  /***********************/
+  /*    InputPressure    */
+  /***********************/
+  {
+    rank=same
+    point_9 [shape=point]
+    node_9 [label=< <I>VariableNode</I><BR/>InputPressure >]
+  }
+  point_8 -> point_9 [arrowhead=none]
+  point_9 -> node_9 [label="hasComponent"]
+
+  /************************/
+  /*    OutputPressure    */
+  /************************/
+  {
+    rank=same
+    point_10 [shape=point]
+    node_10 [label=< <I>VariableNode</I><BR/>OutputPressure >]
+  }
+  point_9 -> point_10 [arrowhead=none]
+  point_10 -> node_10 [label="hasComponent"]
+
+}

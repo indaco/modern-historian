@@ -1,0 +1,7 @@
+# run to install dependencies
+# `ansible-galaxy install -r requirements.yml`
+
+# Allows to use ansible to manage the firewall
+collections:
+  - community.general
+  - community.docker

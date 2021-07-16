@@ -1,0 +1,8 @@
+---
+# vars file for indaco.demostack
+
+influxdb_init_username: '<YOUR_INFLUXDB_USERNAME>'
+influxdb_init_password: '<YOUR_INFLUXDB_PASSWORD>'
+influxdb_init_org: '<YOUR_INFLUXDB_ORGNAME>'
+influxdb_init_bucket: '<YOUR_INFLUXDB_BUCKET_NAME>'
+influxdb_init_admin_token: '<YOUR_INFLUXDB_AUTH_TOKEN>'

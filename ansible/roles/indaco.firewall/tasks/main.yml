@@ -1,0 +1,74 @@
+---
+# tasks file for indaco.firewall
+- name: Install UFW (Uncomplicated firewall)
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - ufw
+    state: present
+
+- name: Allow everything and enable UFW
+  become: yes
+  community.general.ufw:
+    state: enabled
+    policy: allow
+
+- name: Set logging
+  become: yes
+  community.general.ufw:
+    logging: 'on'
+
+- name: Let the sender know when traffic is being denied
+  become: yes
+  community.general.ufw:
+    rule: reject
+    port: auth
+    log: yes
+
+- name: Allow OpenSSH
+  become: yes
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Allow all access to tcp port 2222 (Vagrant SSH)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '2222'
+    proto: tcp
+  when: (ansible_user is defined) and (ansible_user == "vagrant")
+
+- name: Allow all access to tcp port 3000 (Grafana)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '3000'
+    proto: tcp
+
+- name: Allow all access to tcp port 4334 (OPCUA-Server)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '4334'
+    proto: tcp
+
+- name: Allow all access to tcp port 8086 (InfluxDB2)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '8086'
+    proto: tcp
+
+- name: Allow all access to tcp port 9000 (Portainer.io)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '9000'
+    proto: tcp
+
+- name: Restart UFW
+  become: yes
+  ansible.builtin.service:
+    name: ufw
+    state: restarted

@@ -1,0 +1,94 @@
+version: '3.9'
+
+services:
+  opcua:
+    image: indaco/opcua-server
+    hostname: opcuahost
+    container_name: opcua-server
+    restart: always
+    ports:
+      - 4334:4334
+    networks:
+      - {{ demo_network_name }}
+
+  influxdb2:
+    image: influxdb:alpine
+    container_name: influxdb2
+    hostname: influxdb2host
+    ports:
+      - '8086:8086'
+    networks:
+      - {{ demo_network_name }}
+    volumes:
+      - type: bind
+        source: {{ influxdb2_data_path }}
+        target: /var/lib/influxdb2
+      - type: bind
+        source: {{ influxdb2_config_path }}
+        target: /etc/influxdb2
+      - type: bind
+        source: {{ influxdb2_tasks_path }}
+        target: /usr/share
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME={{ influxdb_init_username }}
+      - DOCKER_INFLUXDB_INIT_PASSWORD={{ influxdb_init_password }}
+      - DOCKER_INFLUXDB_INIT_ORG={{ influxdb_init_org }}
+      - DOCKER_INFLUXDB_INIT_BUCKET={{ influxdb_init_bucket }}
+      - DOCKER_INFLUXDB_INIT_RETENTION=1w
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN={{ influxdb_init_admin_token }}
+    restart: always
+
+  telegraf:
+    image: telegraf:alpine
+    container_name: telegraf
+    hostname: telegrafhost
+    volumes:
+      -  {{ telegraf_config_path }}/telegraf.conf:/etc/telegraf/telegraf.conf
+    networks:
+      - {{ demo_network_name }}
+    restart: always
+    depends_on:
+      - influxdb2
+
+  grafana8:
+    image: grafana/grafana:latest
+    container_name: grafana8
+    hostname: grafanahost
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - type: bind
+        source: {{ grafana_datasources_path }}
+        target: /etc/grafana/provisioning/datasources
+      - type: bind
+        source: {{ grafana_dashboards_path }}
+        target: /etc/grafana/provisioning/dashboards
+    ports:
+      - '3000:3000'
+    networks:
+      - {{ demo_network_name }}
+    restart: always
+    depends_on:
+      - influxdb2
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    hostname: portainerhost
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - '9000:9000'
+    networks:
+      - {{ demo_network_name }}
+    volumes:
+      - portainer_data:/data
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    restart: always
+
+networks:
+  {{ demo_network_name }}:
+volumes:
+  grafana_data:
+  portainer_data:

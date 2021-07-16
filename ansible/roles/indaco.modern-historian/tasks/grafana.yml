@@ -1,0 +1,23 @@
+- name: Copy Grafana Datasources provisioner file
+  ansible.builtin.template:
+    src: grafana/provisioning/datasources/datasource.yml.j2
+    dest: '{{ grafana_datasources_path }}/datasource.yml'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'
+
+- name: Copy Grafana Dashboards provisioner file
+  ansible.builtin.template:
+    src: grafana/provisioning/dashboards/default.yml.j2
+    dest: '{{ grafana_dashboards_path }}/default.yml'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'
+
+- name: Copy Grafana Demo Pump Monitoring dashboard
+  ansible.builtin.template:
+    src: grafana/provisioning/dashboards/pump.json.j2
+    dest: '{{ grafana_dashboards_path }}/pump.json'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'

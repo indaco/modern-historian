@@ -1,0 +1,6 @@
+# InfluxDB configuration variables
+influxdb_username: 'demouser'
+influxdb_password: 'demouserpassword'
+influxdb_org: 'demo_org'
+influxdb_bucket: 'demobucket'
+influxdb_admin_token: 'ZJefZivNGKcY_C5glO_D07_kbrEzBFtYVWemw0ckG9nFZhw5-yWqvX23A5xSzLV1Z93uRp4FUFweaPUlKyTVvw=='

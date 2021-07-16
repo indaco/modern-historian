@@ -1,0 +1,17 @@
+---
+# defaults file for indaco.modern-historian
+
+homefolder_path: '/home/{{ ansible_user }}'
+
+demo_network_name: 'industrialedge_net'
+
+influxdb2_data_path: '{{ homefolder_path }}/docker/influxdb2/data'
+influxdb2_config_path: '{{ homefolder_path }}/docker/influxdb2/config'
+influxdb2_tasks_path: '{{ homefolder_path }}/docker/influxdb2/tasks'
+
+telegraf_config_path: '{{ homefolder_path }}/docker/telegraf'
+
+grafana_datasources_path: '{{ homefolder_path }}/docker/grafana/provisioning/datasources'
+grafana_dashboards_path: '{{ homefolder_path }}/docker/grafana/provisioning/dashboards'
+
+portainer_ce_data_path: '{{ homefolder_path }}/docker/portainer_ce/data'

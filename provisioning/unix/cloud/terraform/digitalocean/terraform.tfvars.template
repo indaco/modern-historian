@@ -1,0 +1,11 @@
+# Your DigitalOcean Personal Access Token (Read & Write)
+do_token = ""
+
+# Your SSH Public Key Fingerprint
+ssh_key_fingerprints = [""]
+
+# Local Path To Your SSH Public Key
+pub_key = ""
+
+# Local Path To Your SSH Private Key
+pvt_key = ""

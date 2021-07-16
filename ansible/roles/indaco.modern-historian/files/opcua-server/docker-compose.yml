@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+    opcua:
+      build:
+        context: ./app
+        dockerfile: Dockerfile
+      image: indaco/opcua-server
+      container_name: opcua-server
+      restart: always
+      ports:
+        - 4334:4334

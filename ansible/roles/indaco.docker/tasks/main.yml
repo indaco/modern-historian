@@ -1,0 +1,74 @@
+---
+# tasks file for roles/indaco.docker
+
+- name: Install python3 and pip
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-pip
+    state: present
+    update_cache: no
+
+- name: Pause 20 seconds to let the system network be ready (PLEASE WAIT, DO NOT ABORT!)
+  ansible.builtin.pause:
+    seconds: 20
+
+- name: Add Docker GPG apt Key
+  become: yes
+  ansible.builtin.apt_key:
+    url: '{{ docker_apt_gpg_key }}'
+    state: present
+
+- name: Add Docker Repository
+  become: yes
+  ansible.builtin.apt_repository:
+    repo: '{{ docker_apt_repository }}'
+    state: present
+    update_cache: true
+
+- name: Update apt and install Docker
+  become: yes
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+    update_cache: false
+
+- name: Add ansible_user user to "docker" group
+  become: yes
+  ansible.builtin.user:
+    name: '{{ ansible_user}}'
+    groups: 'docker'
+    append: yes
+  tags:
+    - docker
+
+- name: Run and enable docker
+  become: yes
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Run and enable containerd.io
+  become: yes
+  ansible.builtin.systemd:
+    name: containerd
+    state: started
+    enabled: yes
+
+- name: Install or upgrade docker-compose
+  become: yes
+  ansible.builtin.get_url:
+    url: 'https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64'
+    dest: /usr/local/bin/docker-compose
+    mode: 'a+x'
+    force: yes
+
+- name: Install docker-py lib
+  ansible.builtin.pip:
+    name: docker-py
+    state: present

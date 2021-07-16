@@ -1,0 +1,10 @@
+galaxy_info:
+  author: indaco
+  description: Install and configure UFW
+  license: MIT
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal

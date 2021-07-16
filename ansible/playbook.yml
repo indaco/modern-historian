@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    # System update and  essentials packages installation
+    - role: indaco.essentials
+
+    # Enable and setup the firewall (UFW)
+    - role: indaco.firewall
+
+    # Install Docker and Docker Compose
+    - role: indaco.docker
+
+    # Run the docker compose demo stack
+    - role: indaco.modern-historian
+      influxdb_init_username: '{{ influxdb_username }}'
+      influxdb_init_password: '{{ influxdb_password }}'
+      influxdb_init_org: '{{ influxdb_org }}'
+      influxdb_init_bucket: '{{ influxdb_bucket }}'
+      influxdb_init_admin_token: ' {{ influxdb_admin_token }}'

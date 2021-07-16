@@ -1,0 +1,102 @@
+- name: Get InfluxDB Tasks List as JSON
+  become: yes
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx task list --active-config default --json"
+  register: tasksListAsJson
+  until: tasksListAsJson is succeeded
+  retries: 10
+  delay: 4
+
+- name: Check if Pressure Differences Task already exists
+  ansible.builtin.set_fact:
+    pressureTaskID: "{{ tasksListAsJson.stdout | from_json | community.general.json_query('[? name==`Check Pump Pressure Difference`].id | [0]') }}"
+
+- name: Provisioning the InfluxDB's flux script for Pressures Difference
+  ansible.builtin.template:
+    src: 'influxdb2/tasks/pump_pressure_diff.flux.j2'
+    dest: '{{ influxdb2_tasks_path }}/pump_pressure_diff.flux'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'
+  when: (pressureTaskID is not defined) or (pressureTaskID | length == 0)
+
+- name: Create the InfluxDB Task for Pressures Difference
+  become: yes
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx task create --org {{ influxdb_init_org }} -f /usr/share/pump_pressure_diff.flux"
+  register: result
+  until: result is succeeded
+  retries: 4
+  delay: 2
+  when: (pressureTaskID is not defined) or (pressureTaskID | length == 0)
+
+- name: Print stdout for task creation step
+  ansible.builtin.debug:
+    var: result.stdout
+  when: (result is not defined) or (result | length == 0)
+
+- name: Get InfluxDB Buckets List as JSON
+  become: yes
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx bucket list --active-config default --json"
+  register: bucketsListAsJson
+  until: bucketsListAsJson is succeeded
+  retries: 4
+  delay: 2
+
+- name: Get demobucket id
+  ansible.builtin.set_fact:
+    bucketId: "{{ bucketsListAsJson.stdout|from_json|community.general.json_query('[? name==`demobucket`].id | [0]')}}"
+
+- name: Get InfluxDB Auth Token List as JSON
+  become: yes
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx auth list --active-config default --json"
+  register: tokenListAsJson
+  until: tokenListAsJson is succeeded
+  retries: 4
+  delay: 2
+
+- name: Check if Grafana Token Exists
+  ansible.builtin.set_fact:
+    grafanaToken: "{{ tokenListAsJson.stdout | from_json | community.general.json_query('[? description==`grafana`]') }}"
+
+- name: Create a read-only token for Grafana on demobucket
+  become: yes
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx auth create --active-config default --description grafana --org {{ influxdb_init_org }} --read-bucket {{ bucketId }}"
+  when: (grafanaToken is not defined) or (grafanaToken | length == 0)
+
+- name: Check if Telegraf Writer Token Exists
+  ansible.builtin.set_fact:
+    telegrafWriterToken: "{{ tokenListAsJson.stdout | from_json | community.general.json_query('[? description==`telegraf`]') }}"
+
+- name: Create a write-only token for Telegraf on demobucket
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx auth create --active-config default --description telegraf --org {{ influxdb_init_org }} --write-bucket {{ bucketId }}"
+  when: (telegrafWriterToken is not defined) or (telegrafWriterToken | length == 0)
+
+- name: Get Updated InfluxDB Auth Token List as JSON
+  become: yes
+  ansible.builtin.shell:
+    cmd: docker exec -i influxdb2 bash -c "influx auth list --active-config default --json"
+  register: tokenListAsJson
+  until: tokenListAsJson is succeeded
+  retries: 4
+  delay: 2
+
+- name: Retrieve Grafana token
+  ansible.builtin.set_fact:
+    retrievedGrafanaToken: "{{ tokenListAsJson.stdout | from_json | community.general.json_query('[? description==`grafana`].token | [0]') }}"
+
+- name: Print Out Grafana Token
+  ansible.builtin.debug:
+    msg: '{{ retrievedGrafanaToken }}'
+
+- name: Retrieve Telegraf Writer token
+  ansible.builtin.set_fact:
+    retrievedTelegrafToken: "{{ tokenListAsJson.stdout | from_json | community.general.json_query('[? description==`telegraf`].token | [0]') }}"
+
+- name: Print Out Telegraf Writer Token
+  ansible.builtin.debug:
+    msg: '{{ retrievedTelegrafToken }}'

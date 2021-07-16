@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+MACHINE_NAME="industrialedge"
+ANSIBLE_PLAYBOOK="../../../ansible/playbook.yml"
+
+=begin
+Grafana port: 3000
+OPCUA Server port: 4334
+InfluxDB2 port: 8086
+Portainer port: 9000
+=end
+FORWARDED_PORTS=[3000, 4334, 8086, 9000]
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "#{MACHINE_NAME}"
+  config.vm.define "#{MACHINE_NAME}"
+  config.ssh.insert_key = false
+
+  FORWARDED_PORTS.each do |port|
+    config.vm.network "forwarded_port", guest: port, host: port
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "#{MACHINE_NAME}"
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = false # true to see stdout
+    ansible.compatibility_mode = "2.0"
+    ansible.playbook = "#{ANSIBLE_PLAYBOOK}"
+  end
+end

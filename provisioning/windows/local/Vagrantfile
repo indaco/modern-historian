@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+MACHINE_NAME="industrialedge"
+ANSIBLE_FOLDER="../../../ansible"
+SCRIPTS_FOLDER="../../../provisioning/windows/scripts"
+
+=begin
+Grafana port: 3000
+OPCUA Server port: 4334
+InfluxDB2 port: 8086
+Portainer port: 9000
+=end
+FORWARDED_PORTS=[3000, 4334, 8086, 9000]
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "#{MACHINE_NAME}"
+  config.vm.define "#{MACHINE_NAME}"
+  config.ssh.insert_key = false
+
+  config.vm.synced_folder "#{ANSIBLE_FOLDER}", "/home/vagrant/ansible"
+  config.vm.synced_folder "#{SCRIPTS_FOLDER}", "/home/vagrant/scripts"
+
+  FORWARDED_PORTS.each do |port|
+    config.vm.network "forwarded_port", guest: port, host: port
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "#{MACHINE_NAME}"
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo apt-get -qq update
+    sudo apt-get -qq upgrade --yes
+    sudo apt-get -qq install --yes software-properties-common
+    sudo ln -s /usr/bin/python3 /usr/bin/python
+    sudo apt-get update
+    sudo apt-get -qq install --yes python3-pip
+  SHELL
+end
