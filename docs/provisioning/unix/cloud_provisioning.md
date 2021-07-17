@@ -16,6 +16,9 @@ To complete the setup, you will need:
 
 - **Git** (optional): Use the package manager for your OS, e.g. `apt`, `brew`, ...
 - **Terraform**: download the appropriate package for your OS and architecture from the [official Downloads page](http://www.terraform.io/downloads.html).
+- Python >= 3.8
+- Pip
+- jmespath (via pip) `pip install jmespath`
 - **Ansible**: download the appropriate package for your OS and architecture from the [official Downloads page](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 ### Step 2 - Clone or download the code repository
