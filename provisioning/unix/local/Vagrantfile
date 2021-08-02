@@ -3,6 +3,7 @@
 
 MACHINE_NAME="industrialedge"
 ANSIBLE_PLAYBOOK="../../../ansible/playbook.yml"
+DEBUG = false; # true to see stdout
 
 =begin
 Grafana port: 3000
@@ -27,7 +28,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
-    ansible.verbose = false # true to see stdout
+    ansible.verbose = DEBUG # true to see stdout
     ansible.compatibility_mode = "2.0"
     ansible.playbook = "#{ANSIBLE_PLAYBOOK}"
   end
