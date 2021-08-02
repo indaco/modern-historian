@@ -33,4 +33,4 @@ Below, a graphical representation for the pump object:
 
 ### Graphviz
 
-The [Graphviz](https://graphviz.org/) source file is available [here](./docs/graphviz/pump_model.dot) too.
+The [Graphviz](https://graphviz.org/) source file is available [here](./graphviz/pump_model.dot) too.
