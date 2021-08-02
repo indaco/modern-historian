@@ -2,10 +2,12 @@
 
 It takes care of the entire setup for the modern historian stack.
 
-- Create needed folders
-- Create needed configuration files
-- Pull docker images from docher hub
-- Build the docker image for the OPC UA server
+- Setup InfluxDB2
+- Generate influxDB2's tokens (read and wirte) for Telegraf and Grafana
+- Provision `pump_pressure_diff` task on InfluxDB2
+- Creare config file for Telegraf
+- Provision Gradana datasource
+- Provision Grafana dashboard
 - Run the docker compose stack
 
 ## Example Playbook

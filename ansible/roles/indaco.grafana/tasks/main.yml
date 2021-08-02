@@ -1,0 +1,23 @@
+---
+# tasks file for indaco.grafana
+
+- name: Create 'grafana/provisioning/datasources' folder if not exists
+  ansible.builtin.file:
+    path: '{{ grafana_datasources_path }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0755'
+
+- name: Create 'grafana/provisioning/dashboards' folder if not exists
+  ansible.builtin.file:
+    path: '{{ grafana_dashboards_path }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0755'
+
+- name: Pull the Grafana8 docker image
+  community.docker.docker_image:
+    name: grafana/grafana:latest
+    source: pull

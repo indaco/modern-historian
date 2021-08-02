@@ -1,0 +1,15 @@
+---
+# tasks file for indaco.portainer-ce
+
+- name: Create 'portainer_ce/data' folder if not exists
+  ansible.builtin.file:
+    path: '{{ portainer_ce_data_path }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0755'
+
+- name: Pull the Portainer docker image
+  community.docker.docker_image:
+    name: portainer/portainer-ce:latest
+    source: pull

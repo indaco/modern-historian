@@ -1,0 +1,7 @@
+---
+# defaults file for indaco.grafana
+
+homefolder_path: '/home/{{ ansible_user }}'
+
+grafana_datasources_path: '{{ homefolder_path }}/docker/grafana/provisioning/datasources'
+grafana_dashboards_path: '{{ homefolder_path }}/docker/grafana/provisioning/dashboards'

@@ -1,16 +1,6 @@
 ---
 # tasks file for indaco.modern-historian-stack
 
-- ansible.builtin.include_tasks: create-folders-structure.yml
-
-- name: Copy the OPCUA-Server app to the ansible_user home folder
-  ansible.builtin.copy:
-    src: './opcua-server'
-    dest: '{{ homefolder_path }}'
-    owner: '{{ ansible_user }}'
-    group: '{{ ansible_user }}'
-    mode: '0644'
-
 - name: Copy docker-compose template file
   ansible.builtin.template:
     src: docker-compose.yml.j2
@@ -18,8 +8,6 @@
     owner: '{{ ansible_user }}'
     group: '{{ ansible_user }}'
     mode: '0644'
-
-- ansible.builtin.include_tasks: dockers-pull.yml
 
 - name: Start InfluxDB setup
   become: yes
@@ -31,7 +19,7 @@
   ansible.builtin.pause:
     seconds: 30
 
-- ansible.builtin.include_tasks: influx.yml
+- ansible.builtin.include_tasks: influx-setup.yml
 
 - name: Stop InfluxDB - Initial Setup fineshed
   become: yes

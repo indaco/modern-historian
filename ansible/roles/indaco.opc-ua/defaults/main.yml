@@ -1,0 +1,4 @@
+---
+# defaults file for indaco.opc-ua
+
+homefolder_path: '/home/{{ ansible_user }}'

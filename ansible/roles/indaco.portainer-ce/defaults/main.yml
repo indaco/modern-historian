@@ -1,0 +1,5 @@
+---
+# defaults file for indaco.portainer-ce
+
+homefolder_path: '/home/{{ ansible_user }}'
+portainer_ce_data_path: '{{ homefolder_path }}/docker/portainer_ce/data'

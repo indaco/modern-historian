@@ -1,0 +1,5 @@
+---
+# defaults file for indaco.telegraf
+
+homefolder_path: '/home/{{ ansible_user }}'
+telegraf_config_path: '{{ homefolder_path }}/docker/telegraf'

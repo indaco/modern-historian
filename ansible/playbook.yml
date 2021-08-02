@@ -11,6 +11,23 @@
     # Install Docker and Docker Compose
     - role: indaco.docker
 
+    # Setup the OPC-UA Server app
+    - role: indaco.opc-ua
+
+    # Create folder structure and download InfluxDB2 docker image
+    - role: indaco.influxdb2
+
+    # Create folder structure and download Telegraf docker image
+    - role: indaco.telegraf
+
+    # Create folder structure and download Grafana docker image
+    - role: indaco.grafana
+
+    # Create folder structure and download Portainer CE docker image
+    - role: indaco.portainer-ce
+
+    # Setup InfluxDB2, generates tokens for the apps,
+    # provisioninig Telegraf and Grafana configurations.
     # Run the docker compose demo stack
     - role: indaco.modern-historian
       influxdb_init_username: '{{ influxdb_username }}'

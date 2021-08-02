@@ -1,0 +1,39 @@
+---
+# tasks file for indaco.opc-ua
+
+- name: Copy the OPCUA-Server app to the ansible_user home folder
+  ansible.builtin.copy:
+    src: './opcua-server'
+    dest: '{{ homefolder_path }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'
+
+#- name: Copy docker-compose template file
+#  ansible.builtin.template:
+#    src: docker-compose.yml.j2
+#    dest: '{{ homefolder_path }}/docker-compose.yml'
+#    owner: '{{ ansible_user }}'
+#    group: '{{ ansible_user }}'
+#    mode: '0644'
+
+- name: Pull the node14 alpine3.14 docker image
+  community.docker.docker_image:
+    name: node:14-alpine3.14
+    source: pull
+
+- name: Build the OPCUA-Server app as docker image
+  community.docker.docker_image:
+    name: indaco/opcua-server
+    build:
+      path: '{{ homefolder_path }}/opcua-server/app'
+      dockerfile: Dockerfile
+    source: build
+  register: buildOPCUA
+  until: buildOPCUA is succeeded
+  retries: 4
+  delay: 2
+
+- name: Pause for 10 seconds
+  ansible.builtin.pause:
+    seconds: 10

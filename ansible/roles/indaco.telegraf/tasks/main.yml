@@ -1,0 +1,15 @@
+---
+# tasks file for indaco.telegraf
+
+- name: Create 'telegraf' folder if not exists
+  ansible.builtin.file:
+    path: '{{ telegraf_config_path }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0755'
+
+- name: Pull the Telegraf alpine docker image
+  community.docker.docker_image:
+    name: telegraf:alpine
+    source: pull
