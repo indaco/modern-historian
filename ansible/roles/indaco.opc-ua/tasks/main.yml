@@ -9,14 +9,6 @@
     group: '{{ ansible_user }}'
     mode: '0644'
 
-#- name: Copy docker-compose template file
-#  ansible.builtin.template:
-#    src: docker-compose.yml.j2
-#    dest: '{{ homefolder_path }}/docker-compose.yml'
-#    owner: '{{ ansible_user }}'
-#    group: '{{ ansible_user }}'
-#    mode: '0644'
-
 - name: Pull the node14 alpine3.14 docker image
   community.docker.docker_image:
     name: node:14-alpine3.14
@@ -31,8 +23,8 @@
     source: build
   register: buildOPCUA
   until: buildOPCUA is succeeded
-  retries: 4
-  delay: 2
+  retries: 5
+  delay: 4
 
 - name: Pause for 10 seconds
   ansible.builtin.pause:
