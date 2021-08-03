@@ -13,3 +13,7 @@
   community.docker.docker_image:
     name: telegraf:alpine
     source: pull
+  register: pullTelegraf
+  until: pullTelegraf is succeeded
+  retries: 5
+  delay: 4

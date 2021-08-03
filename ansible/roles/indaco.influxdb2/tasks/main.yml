@@ -29,3 +29,7 @@
   community.docker.docker_image:
     name: influxdb:alpine
     source: pull
+  register: pullInfluxDB2
+  until: pullInfluxDB2 is succeeded
+  retries: 5
+  delay: 4

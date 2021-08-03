@@ -13,3 +13,7 @@
   community.docker.docker_image:
     name: portainer/portainer-ce:latest
     source: pull
+  register: pullPortainer
+  until: pullPortainer is succeeded
+  retries: 5
+  delay: 4

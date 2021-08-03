@@ -21,3 +21,7 @@
   community.docker.docker_image:
     name: grafana/grafana:latest
     source: pull
+  register: pullGrafana
+  until: pullGrafana is succeeded
+  retries: 5
+  delay: 4
