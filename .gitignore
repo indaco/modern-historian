@@ -97,3 +97,7 @@ terraform.rc
 ### Local files ###
 *.drawio
 
+### Tokens file ###
+
+tokens.txt
+
