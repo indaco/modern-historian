@@ -9,6 +9,16 @@
     group: '{{ ansible_user }}'
     mode: '0644'
 
+- name: Get infos on docker network
+  community.docker.docker_network_info:
+    name: '{{ public_network_name }}'
+  register: networkResult
+
+- name: Create docker network "public_network_name"
+  ansible.builtin.shell:
+    cmd: 'docker network create {{ public_network_name }}'
+  when: not networkResult.exists
+
 - name: Start InfluxDB setup
   become: yes
   ansible.builtin.shell:

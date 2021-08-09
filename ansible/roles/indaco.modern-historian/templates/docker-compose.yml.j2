@@ -1,6 +1,33 @@
 version: '3.9'
 
 services:
+
+  traefik:
+    image: "traefik:v2.4"
+    container_name: "traefik"
+    hostname: traefikhost
+    restart: always
+    ports:
+      - "8081:8081"
+      - "6443:6443"
+    networks:
+      - {{ internal_network_name }}
+      - {{ public_network_name }}
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+      - type: bind
+        source: /home/{{ ansible_user }}/traefik_conf/static_conf.yml
+        target: /traefik.yml
+      - type: bind
+        source: /home/{{ ansible_user }}/traefik_conf/
+        target: /configuration/
+      - type: bind
+        source: /home/{{ ansible_user }}/certs/
+        target: /certs/
+
   opcua:
     image: indaco/opcua-server
     hostname: opcuahost
@@ -9,16 +36,19 @@ services:
     ports:
       - 4334:4334
     networks:
-      - {{ demo_network_name }}
+      - {{ internal_network_name }}
+      - {{ public_network_name }}
 
   influxdb2:
     image: influxdb:alpine
     container_name: influxdb2
     hostname: influxdb2host
+    restart: always
     ports:
       - '8086:8086'
     networks:
-      - {{ demo_network_name }}
+      - {{ internal_network_name }}
+      - {{ public_network_name }}
     volumes:
       - type: bind
         source: {{ influxdb2_data_path }}
@@ -31,23 +61,22 @@ services:
         target: /usr/share
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME={{ influxdb_init_username }}
-      - DOCKER_INFLUXDB_INIT_PASSWORD={{ influxdb_init_password }}
+      - DOCKER_INFLUXDB_INIT_USERNAME={{ demo_username }}
+      - DOCKER_INFLUXDB_INIT_PASSWORD={{ demo_password }}
       - DOCKER_INFLUXDB_INIT_ORG={{ influxdb_init_org }}
       - DOCKER_INFLUXDB_INIT_BUCKET={{ influxdb_init_bucket }}
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN={{ influxdb_init_admin_token }}
-    restart: always
 
   telegraf:
     image: telegraf:alpine
     container_name: telegraf
     hostname: telegrafhost
+    restart: always
     volumes:
       -  {{ telegraf_config_path }}/telegraf.conf:/etc/telegraf/telegraf.conf
     networks:
-      - {{ demo_network_name }}
-    restart: always
+      - {{ internal_network_name }}
     depends_on:
       - influxdb2
 
@@ -55,6 +84,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana8
     hostname: grafanahost
+    restart: always
     volumes:
       - grafana_data:/var/lib/grafana
       - type: bind
@@ -63,32 +93,57 @@ services:
       - type: bind
         source: {{ grafana_dashboards_path }}
         target: /etc/grafana/provisioning/dashboards
+    environment:
+      - "GF_SERVER_ROOT_URL=https://127.0.0.1:6443/grafana"
+      - "GF_SERVER_DOMAIN=127.0.0.1"
+      - "GF_SECURITY_ADMIN_USER={{ demo_username }}"
+      - "GF_SECURITY_ADMIN_PASSWORD={{ demo_password }}"
     ports:
       - '3000:3000'
     networks:
-      - {{ demo_network_name }}
-    restart: always
+      - {{ internal_network_name }}
+      - {{ public_network_name }}
     depends_on:
       - influxdb2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.middlewares=strip-grafana"
+      - "traefik.http.middlewares.strip-grafana.stripprefix.prefixes=/grafana"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
     hostname: portainerhost
     command: -H unix:///var/run/docker.sock
+    restart: always
     ports:
       - '9000:9000'
     networks:
-      - {{ demo_network_name }}
+      - {{ internal_network_name }}
+      - {{ public_network_name }}
     volumes:
       - portainer_data:/data
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
-    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=PathPrefix(`/portainer`)"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.middlewares=strip-portainer"
+      - "traefik.http.middlewares.strip-portainer.stripprefix.prefixes=/portainer"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
 
 networks:
-  {{ demo_network_name }}:
+  {{ public_network_name }}:
+    external: true
+  {{ internal_network_name }}:
+    external: false
 volumes:
   grafana_data:
   portainer_data:

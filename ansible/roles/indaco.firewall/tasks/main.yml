@@ -39,13 +39,6 @@
     proto: tcp
   when: (ansible_user is defined) and (ansible_user == "vagrant")
 
-- name: Allow all access to tcp port 3000 (Grafana)
-  become: yes
-  community.general.ufw:
-    rule: allow
-    port: '3000'
-    proto: tcp
-
 - name: Allow all access to tcp port 4334 (OPCUA-Server)
   become: yes
   community.general.ufw:
@@ -53,18 +46,25 @@
     port: '4334'
     proto: tcp
 
+- name: Allow all access to tcp port 6443 (Traefik WebSecure port)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '6443'
+    proto: tcp
+
+- name: Allow all access to tcp port 8081 (Traefik Web port)
+  become: yes
+  community.general.ufw:
+    rule: allow
+    port: '8081'
+    proto: tcp
+
 - name: Allow all access to tcp port 8086 (InfluxDB2)
   become: yes
   community.general.ufw:
     rule: allow
     port: '8086'
-    proto: tcp
-
-- name: Allow all access to tcp port 9000 (Portainer.io)
-  become: yes
-  community.general.ufw:
-    rule: allow
-    port: '9000'
     proto: tcp
 
 - name: Restart UFW

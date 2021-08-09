@@ -1,0 +1,26 @@
+log:
+  level: INFO
+entryPoints:
+  web:
+    address: '{{ traefik_web_port }}'
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: '{{ traefik_websecure_port }}'
+api:
+  dashboard: true
+  insecure: true
+  debug: true
+providers:
+  docker:
+    watch: true
+    network: 'public'
+    exposedByDefault: false
+  file:
+    directory: "configuration/"
+    watch: true
+serversTransport:
+  insecureSkipVerify: true

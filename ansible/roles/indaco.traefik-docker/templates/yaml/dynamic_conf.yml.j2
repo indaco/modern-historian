@@ -1,0 +1,26 @@
+http:
+  middlewares:
+    simpleAuth:
+      basicAuth:
+        users:
+          - 'admin:$apr1$m7mNVoV/$IG4lC1WT5NlDhabFPxQox0'
+  routers:
+    api:
+      rule: PathPrefix(`/api`) || PathPrefix(`/dashboard`)
+      entrypoints:
+        - websecure
+      tls: true
+      middlewares:
+        - simpleAuth
+      service: api@internal
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: '/certs/{{ ansible_hostname}}.crt'
+        keyFile: '/certs/{{ ansible_hostname }}.key'
+  certificates:
+    - certFile: '/certs/{{ ansible_hostname }}.crt'
+      keyFile: '/certs/{{ ansible_hostname }}.key'
+      stores:
+        - default

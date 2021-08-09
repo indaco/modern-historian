@@ -1,0 +1,5 @@
+---
+# defaults file for indaco.ssl-cert
+
+homefolder_path: '/home/{{ ansible_user }}'
+certs_folder_path: '{{ homefolder_path }}/certs'

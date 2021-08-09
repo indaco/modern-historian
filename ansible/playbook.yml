@@ -11,6 +11,9 @@
     # Install Docker and Docker Compose
     - role: indaco.docker
 
+    # Generate CA and Certificate for SSL
+    - role: indaco.ssl-cert
+
     # Setup the OPC-UA Server app
     - role: indaco.opc-ua
 
@@ -25,6 +28,9 @@
 
     # Create folder structure and download Portainer CE docker image
     - role: indaco.portainer-ce
+
+    # Download and setup Treafik
+    - role: indaco.traefik-docker
 
     # Setup InfluxDB2, generates tokens for the apps,
     # provisioninig Telegraf and Grafana configurations.

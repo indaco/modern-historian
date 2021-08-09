@@ -1,0 +1,37 @@
+---
+# tasks file for indaco.traefik-docker
+
+#- ansible.builtin.import_tasks: ssl-cert.yml
+
+- name: Create folder for Traefik config files
+  ansible.builtin.file:
+    path: '{{ traefik_configs_folder_path }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0755
+
+- name: Copy Traefik static config file
+  ansible.builtin.template:
+    src: yaml/static_conf.yml.j2
+    dest: '{{ traefik_static_config_file }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0644
+
+- name: Copy Traefik dynamic config file
+  ansible.builtin.template:
+    src: yaml/dynamic_conf.yml.j2
+    dest: '{{ traefik_dynamic_config_file }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0644
+
+- name: Pull the latest Traefik V2 docker image
+  community.docker.docker_image:
+    name: traefik:latest
+    source: pull
+  register: pullTraefik
+  until: pullTraefik is succeeded
+  retries: 5
+  delay: 4

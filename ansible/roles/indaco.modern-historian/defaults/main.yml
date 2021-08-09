@@ -3,7 +3,8 @@
 
 homefolder_path: '/home/{{ ansible_user }}'
 
-demo_network_name: 'industrialedge_net'
+public_network_name: 'public'
+internal_network_name: 'industrialedge_net'
 
 influxdb2_data_path: '{{ homefolder_path }}/docker/influxdb2/data'
 influxdb2_config_path: '{{ homefolder_path }}/docker/influxdb2/config'

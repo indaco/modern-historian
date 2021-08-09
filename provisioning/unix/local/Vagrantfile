@@ -6,12 +6,11 @@ ANSIBLE_PLAYBOOK="../../../ansible/playbook.yml"
 DEBUG = false; # true to see stdout
 
 =begin
-Grafana port: 3000
 OPCUA Server port: 4334
 InfluxDB2 port: 8086
-Portainer port: 9000
+Traefik ports: 8081, 6443
 =end
-FORWARDED_PORTS=[3000, 4334, 8086, 9000]
+FORWARDED_PORTS=[4334, 6443, 8081, 8086]
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/focal64"

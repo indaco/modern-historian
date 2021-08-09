@@ -1,0 +1,12 @@
+---
+# defaults file for indaco.traefik-docker
+
+homefolder_path: '/home/{{ ansible_user }}'
+certs_folder_path: '{{ homefolder_path }}/certs'
+
+traefik_web_port: ':8081'
+traefik_websecure_port: ':6443'
+
+traefik_configs_folder_path: '{{ homefolder_path }}/traefik_conf'
+traefik_static_config_file: '{{ traefik_configs_folder_path }}/static_conf.yml'
+traefik_dynamic_config_file: '{{ traefik_configs_folder_path }}/dynamic_conf.yml'

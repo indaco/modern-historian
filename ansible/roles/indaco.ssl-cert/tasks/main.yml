@@ -1,0 +1,102 @@
+---
+# tasks file for indaco.ssl-cert
+
+- name: Create folder for Traefik config files
+  ansible.builtin.file:
+    path: '{{ certs_folder_path }}'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0755
+
+- name: Generate a private key for CA
+  community.crypto.openssl_privatekey:
+    path: '{{ certs_folder_path }}/ca.key'
+    type: RSA
+    size: 4096
+    state: present
+    force: True
+  register: ca_key
+
+- name: Generate CSR (Certificate Signing Request) for CA
+  community.crypto.openssl_csr:
+    path: '{{ certs_folder_path }}/ca.csr'
+    privatekey_path: '{{ ca_key.filename }}'
+    common_name: 'CA'
+    organization_name: 'indaco'
+    basic_constraints:
+      - CA:TRUE
+      - pathlen:1
+    basic_constraints_critical: True
+    key_usage:
+      - keyCertSign
+      - digitalSignature
+    force: True
+  register: ca_csr
+
+- name: Generate a self-signed CA certificate
+  community.crypto.x509_certificate:
+    path: '{{ certs_folder_path }}/ca.crt'
+    csr_path: '{{ ca_csr.filename }}'
+    privatekey_path: '{{ ca_key.filename }}'
+    provider: selfsigned
+    force: True
+  register: ca_crt
+
+- name: Generate private key for each node
+  community.crypto.openssl_privatekey:
+    path: '{{ certs_folder_path }}/{{ ansible_hostname }}.key'
+    type: RSA
+    size: 4096
+    state: present
+    force: True
+
+- name: Get current IP for master nodes
+  ansible.builtin.set_fact:
+    node_ip: '{{ ansible_enp0s3.ipv4.address }}'
+
+- name: Generate CSR (Certificate Signing Request) for each node
+  community.crypto.openssl_csr:
+    path: '{{ certs_folder_path }}/{{ ansible_hostname }}.csr'
+    privatekey_path: '{{ certs_folder_path }}/{{ ansible_hostname }}.key'
+    common_name: '{{ ansible_hostname }}'
+    key_usage:
+      - digitalSignature
+      - keyEncipherment
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+    subject_alt_name:
+      - IP:{{ node_ip }}
+      - IP:127.0.0.1
+    force: True
+
+- name: Generate a member certificate signed with own CA certificate
+  community.crypto.x509_certificate:
+    path: '{{ certs_folder_path }}/{{ ansible_hostname }}.crt'
+    csr_path: '{{ certs_folder_path }}/{{ ansible_hostname }}.csr'
+    provider: ownca
+    ownca_path: '{{ ca_crt.filename }}'
+    ownca_privatekey_path: '{{ ca_key.filename }}'
+    force: True
+
+- name: Set permissions to the CSR file
+  ansible.builtin.file:
+    path: '{{ certs_folder_path }}/{{ ansible_hostname }}.csr'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0644
+
+- name: Set permissions to the certificate file
+  ansible.builtin.file:
+    path: '{{ certs_folder_path }}/{{ ansible_hostname }}.crt'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0644
+
+- name: Set permissions to the key file
+  ansible.builtin.file:
+    path: '{{ certs_folder_path }}/{{ ansible_hostname }}.key'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0600
