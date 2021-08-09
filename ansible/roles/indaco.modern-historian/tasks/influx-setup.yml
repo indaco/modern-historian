@@ -85,18 +85,36 @@
   retries: 4
   delay: 2
 
-- name: Retrieve Grafana token
+- name: Retrieve Grafana read-only token
   ansible.builtin.set_fact:
     retrievedGrafanaToken: "{{ tokenListAsJson.stdout | from_json | community.general.json_query('[? description==`grafana`].token | [0]') }}"
 
-- name: Print Out Grafana Token
+- name: Print Out Grafana read-only Token
   ansible.builtin.debug:
     msg: '{{ retrievedGrafanaToken }}'
 
-- name: Retrieve Telegraf Writer token
+- name: Log Grafana read-only Token to file
+  ansible.builtin.lineinfile:
+    create: yes
+    state: present
+    line: 'retrievedGrafanaToken = {{ retrievedGrafanaToken }}'
+    dest: '/vagrant/output/tokens.txt'
+    insertbefore: EOF
+  when: (retrievedGrafanaToken is defined)
+
+- name: Retrieve Telegraf write-only token
   ansible.builtin.set_fact:
     retrievedTelegrafToken: "{{ tokenListAsJson.stdout | from_json | community.general.json_query('[? description==`telegraf`].token | [0]') }}"
 
-- name: Print Out Telegraf Writer Token
+- name: Print Out Telegraf write-only Token
   ansible.builtin.debug:
     msg: '{{ retrievedTelegrafToken }}'
+
+- name: Log Telegraf write-only Token to file
+  ansible.builtin.lineinfile:
+    create: yes
+    state: present
+    line: 'retrievedTelegrafToken = {{ retrievedTelegrafToken }}'
+    dest: '/vagrant/output/tokens.txt'
+    insertbefore: EOF
+  when: (retrievedTelegrafToken is defined)

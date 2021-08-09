@@ -1,6 +1,11 @@
 ---
 # tasks file for indaco.modern-historian-stack
 
+- name: Cleanup output dir
+  ansible.builtin.file:
+    path: '/vagrant/output'
+    state: absent
+
 - name: Copy docker-compose template file
   ansible.builtin.template:
     src: docker-compose.yml.j2
