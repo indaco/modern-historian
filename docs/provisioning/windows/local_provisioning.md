@@ -81,30 +81,3 @@ Once the Ansible installation finish, run the playbook:
 # /home/vagrant/scripts
 bash run-playbook.sh
 ```
-
-### Step 7 - Access to apps
-
-During the provisioning step, several configurations are applied in order to automate and simplify the setup. Below is a quick summary of what you get out of the box:
-
-- **InfluxDB v2**:
-  - tokens for telegraf and Grafana created
-  - bucket created
-  - task to calculate prussures differences
-- **Telegraf**:
-  - configuration to read data from the OPC UA Server
-  - configuration to write data into InfluxDB's bucket
-- **Grafana**:
-  - datasource configuraion
-  - demo dashboard
-
-In order to get access to the services please, refer to the below table:
-
-| Service     |          URL          | Username |                                Password |
-| ----------- | :-------------------: | -------: | --------------------------------------: |
-| InfluxDB v2 | http://localhost:8086 | demouser |                        demouserpassword |
-| Grafana     | http://localhost:3000 |    admin | admin (change it after the first login) |
-| Portainer   | http://localhost:9000 |    admin |             (set it at the first login) |
-
-To get access to the OPC UA Server, you can use any OPC UA client, e.g. [Prosys](https://downloads.prosysopc.com/opc-ua-client-downloads.php)
-
-As url, use the following `opc.tcp://localhost:4334/UA/DemoOPCUAServer`

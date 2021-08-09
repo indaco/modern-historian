@@ -79,34 +79,7 @@ When the process finish you should see a summary reporting you the name and the 
 
 If you want you can now use SSH to login `ssh root@<PUBLIC_IP> -i <PATH_TO_YOUR_SSH_PRIVATE_KEY>`
 
-### Step 6 - Access to apps
-
-During the provisioning step, several configurations are applied in order to automate and simplify the setup. Below is a quick summary of what you get out of the box:
-
-- **InfluxDB v2**:
-  - tokens for telegraf and Grafana created
-  - bucket created
-  - task to calculate prussures differences
-- **Telegraf**:
-  - configuration to read data from the OPC UA Server
-  - configuration to write data into InfluxDB's bucket
-- **Grafana**:
-  - datasource configuraion
-  - demo dashboard
-
-In order to get access to the services please, refer to the below table:
-
-| Service     |           URL           | Username |                                Password |
-| ----------- | :---------------------: | -------: | --------------------------------------: |
-| InfluxDB v2 | http://<PUBLIC_IP>:8086 | demouser |                        demouserpassword |
-| Grafana     | http://<PUBLIC_IP>:3000 |    admin | admin (change it after the first login) |
-| Portainer   | http://<PUBLIC_IP>:9000 |    admin |             (set it at the first login) |
-
-To get access to the OPC UA Server, you can use any OPC UA client, e.g. [Prosys](https://downloads.prosysopc.com/opc-ua-client-downloads.php)
-
-As url, use the following `opc.tcp://<PUBLIC_IP>:4334/UA/DemoOPCUAServer`
-
-### Step 7 - Do not loose money
+### Step 6 - Do not loose money
 
 Remember that DigitalOcean is a paid service. When yo do not need the environment up and running, destroy it and avoid spending money.
 
