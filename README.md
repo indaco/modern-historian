@@ -36,11 +36,13 @@ Several configurations are applied during the provisioning process in order to a
 - **Trefik**:
   - Setup Traefik as reverse proxy and load balancer for Portainer and Grafana
 
+InfluxDB2's generated tokens are stored on `output/tokens.txt` file.
+
 Below is a screenshot for the provisioned dashboard:
 
 ![Grafana Dashboard](./docs/images/grafana_dashboard.png)
 
-### Access to the services
+## Access to the services
 
 In order to get access to the services please, refer to the below table:
 
