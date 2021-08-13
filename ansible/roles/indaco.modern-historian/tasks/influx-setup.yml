@@ -33,7 +33,6 @@
 - name: Print stdout for task creation step
   ansible.builtin.debug:
     var: result.stdout
-  when: (result is not defined) or (result | length == 0)
 
 - name: Get InfluxDB Buckets List as JSON
   become: yes
