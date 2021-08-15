@@ -11,9 +11,9 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_droplet" "industrialedge" {
+resource "digitalocean_droplet" "modernhistorian" {
   image               = "ubuntu-20-04-x64"
-  name                = "industrialedge"
+  name                = "modernhistorian"
   region              = var.region
   size                = var.server_size
   private_networking  = true

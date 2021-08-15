@@ -11,9 +11,9 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_droplet" "industrialedge" {
+resource "digitalocean_droplet" "modernhistorian" {
   image               = "ubuntu-20-04-x64"
-  name                = "industrialedge"
+  name                = "modernhistorian"
   region              = var.region
   size                = var.server_size
   private_networking  = true
@@ -28,15 +28,15 @@ resource "digitalocean_droplet" "industrialedge" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get -qq update",
-      "sudo apt-get -qq upgrade --yes",
-      "sudo apt-get -qq install --yes apt-transport-https",
-      "sudo apt-get -qq install --yes ca-certificates",
-      "sudo apt-get -qq install --yes build-essentials",
-      "sudo apt install --yes software-properties-common",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq upgrade --yes",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes apt-transport-https",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes ca-certificates",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes build-essentials",
+      "DEBIAN_FRONTEND=noninteractive sudo apt install --yes software-properties-common",
       "sudo ln -s /usr/bin/python3 /usr/bin/python",
-      "sudo apt-get -qq update",
-      "sudo apt-get -qq install --yes python3-pip",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update",
+      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes python3-pip",
       "sudo mkdir -p /home/root/ansible",
       "sudo mkdir -p /home/root/scripts",
       "echo Done!"

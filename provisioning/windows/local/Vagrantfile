@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-MACHINE_NAME="industrialedge"
+MACHINE_NAME="modernhistorian"
 ANSIBLE_FOLDER="../../../ansible"
 SCRIPTS_FOLDER="../../../provisioning/windows/scripts"
 
@@ -31,11 +31,11 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get -qq update
-    sudo apt-get -qq upgrade --yes
-    sudo apt-get -qq install --yes software-properties-common
-    sudo ln -s /usr/bin/python3 /usr/bin/python
-    sudo apt-get update
-    sudo apt-get -qq install --yes python3-pip
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq upgrade --yes
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes software-properties-common
+    DEBIAN_FRONTEND=noninteractive sudo ln -s /usr/bin/python3 /usr/bin/python
+    DEBIAN_FRONTEND=noninteractive sudo apt-get update
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes python3-pip
   SHELL
 end

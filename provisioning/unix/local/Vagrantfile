@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-MACHINE_NAME="industrialedge"
+MACHINE_NAME="modernhistorian"
 ANSIBLE_PLAYBOOK="../../../ansible/playbook.yml"
 DEBUG = false; # true to see stdout
 
