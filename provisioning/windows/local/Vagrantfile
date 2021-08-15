@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-MACHINE_NAME="modernhistorian"
+MACHINE_NAME="modern-historian"
 ANSIBLE_FOLDER="../../../ansible"
 SCRIPTS_FOLDER="../../../provisioning/windows/scripts"
 
