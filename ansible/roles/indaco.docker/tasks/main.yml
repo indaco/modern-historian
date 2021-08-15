@@ -27,6 +27,10 @@
     state: present
     update_cache: true
 
+- name: Pause 30 seconds to let APT completing the update cache process (PLEASE WAIT, DO NOT ABORT!)
+  ansible.builtin.pause:
+    seconds: 30
+
 - name: Update apt and install Docker
   become: yes
   ansible.builtin.apt:
