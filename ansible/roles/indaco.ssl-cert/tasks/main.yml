@@ -51,9 +51,24 @@
     state: present
     force: True
 
-- name: Get current IP for master nodes
+- name: Get current IP for master nodes for enp03s network interface
   ansible.builtin.set_fact:
     node_ip: '{{ ansible_enp0s3.ipv4.address }}'
+  when: ansible_enp0s3.ipv4.address is defined
+
+- name: Get current IP for master nodes for enp08s network interface
+  ansible.builtin.set_fact:
+    node_ip: '{{ ansible_enp0s8.ipv4.address }}'
+  when: ansible_enp0s8.ipv4.address is defined
+
+- name: Get current IP for master nodes for eth0 network interface
+  ansible.builtin.set_fact:
+    node_ip: '{{ ansible_eth0.ipv4.address }}'
+  when: ansible_eth0.ipv4.address is defined
+
+- name: Print out IP address
+  ansible.builtin.debug:
+    msg: '{{ node_ip }}'
 
 - name: Generate CSR (Certificate Signing Request) for each node
   community.crypto.openssl_csr:
