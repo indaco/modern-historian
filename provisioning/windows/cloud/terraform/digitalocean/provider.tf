@@ -28,15 +28,14 @@ resource "digitalocean_droplet" "modern-historian" {
 
   provisioner "remote-exec" {
     inline = [
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update",
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq upgrade --yes",
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes apt-transport-https",
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes ca-certificates",
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes build-essentials",
-      "DEBIAN_FRONTEND=noninteractive sudo apt install --yes software-properties-common",
+      "sudo apt -qq update",
+      "sudo apt -qq install --yes apt-transport-https",
+      "sudo apt -qq install --yes ca-certificates",
+      "sudo apt -qq install --yes build-essentials",
+      "sudo apt -qq install --yes software-properties-common",
       "sudo ln -s /usr/bin/python3 /usr/bin/python",
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update",
-      "DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes python3-pip",
+      "sudo apt -qq update",
+      "sudo apt -qq install --yes python3-pip",
       "sudo mkdir -p /home/root/ansible",
       "sudo mkdir -p /home/root/scripts",
       "echo Done!"
