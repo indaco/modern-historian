@@ -6,11 +6,12 @@ ANSIBLE_FOLDER="../../../ansible"
 SCRIPTS_FOLDER="../../../provisioning/windows/scripts"
 
 =begin
+Grafana port: 3000
 OPCUA Server port: 4334
 InfluxDB2 port: 8086
-Traefik ports: 8081, 6443
+Portainer port: 9000
 =end
-FORWARDED_PORTS=[4334, 6443, 8081, 8086]
+FORWARDED_PORTS=[3000, 4334, 8086, 9000]
 
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/focal64"
@@ -30,11 +31,11 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt -qq update
-    sudo apt -qq upgrade --yes
-    sudo apt -qq install --yes software-properties-common
-    sudo ln -s /usr/bin/python3 /usr/bin/python
-    sudo apt update
-    sudo apt -qq install --yes python3-pip
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq upgrade --yes
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes software-properties-common
+    DEBIAN_FRONTEND=noninteractive sudo ln -s /usr/bin/python3 /usr/bin/python
+    DEBIAN_FRONTEND=noninteractive sudo apt-get update
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes python3-pip
   SHELL
 end
