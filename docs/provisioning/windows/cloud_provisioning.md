@@ -76,7 +76,20 @@ Move into the `scripts` folder provisioned during the VM creation phase:
 cd /home/root/scripts
 ```
 
-Now it is time to install Ansible:
+Update the system and install the essential packages
+
+```bash
+# You are here: /home/root/scripts
+bash system-essentials.sh
+```
+
+If an upgrade to `openssh-server` exists, the system will ask you how to manage the existing configuration for it
+
+![OpenSSH Server Config Diagram](../../images/sshd_config.png)
+
+Ensure to preserve the existing one selecting `keep the local version currently installed`
+
+Now it is time to install Ansible
 
 ```bash
 # You are here: /home/root/scripts
