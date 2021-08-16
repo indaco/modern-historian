@@ -29,12 +29,4 @@ Vagrant.configure("2") do |config|
     vb.name = "#{MACHINE_NAME}"
   end
 
-  config.vm.provision "shell", inline: <<-SHELL
-    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq update
-    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq upgrade --yes
-    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes software-properties-common
-    DEBIAN_FRONTEND=noninteractive sudo ln -s /usr/bin/python3 /usr/bin/python
-    DEBIAN_FRONTEND=noninteractive sudo apt-get update
-    DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install --yes python3-pip
-  SHELL
 end

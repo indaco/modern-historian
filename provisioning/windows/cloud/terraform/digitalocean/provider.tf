@@ -28,20 +28,8 @@ resource "digitalocean_droplet" "modern-historian" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo apt -qq update",
-      "sudo apt -qq install --yes apt-transport-https",
-      "sudo apt -qq install --yes ca-certificates",
-      "sudo apt -qq install --yes build-essentials",
-      "sudo apt -qq install --yes software-properties-common",
-      "sudo apt -qq install --yes curl",
-      "sudo apt -qq install --yes gnupg2",
-      "sudo apt -qq install --yes lsb-release",
-      "sudo ln -s /usr/bin/python3 /usr/bin/python",
-      "sudo apt -qq update",
-      "sudo apt -qq install --yes python3-pip",
       "sudo mkdir -p /home/root/ansible",
       "sudo mkdir -p /home/root/scripts",
-      "echo Done!"
     ]
   }
 
