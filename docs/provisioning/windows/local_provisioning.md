@@ -64,16 +64,7 @@ Now it is time to install Ansible:
 bash ansible-installer.sh
 ```
 
-### Step 5 - Install Ansible galaxy dependencies
-
-Once you have Ansible installed on your local machine, run the following command to install the galaxy collection used by the project
-
-```bash
-# You are here: /home/vagrant
-ansible-galaxy collection install -r ./ansible/requirements.yml
-```
-
-## Step 6 - Run the Ansible playbook
+## Step 5 - Run the Ansible playbook
 
 Once the Ansible installation finish, run the playbook:
 
