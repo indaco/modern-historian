@@ -22,7 +22,7 @@ Here is a diagram to show the architecture:
 Several configurations are applied during the provisioning process in order to automate and simplify the setup. Below is a quick summary of what you get out of the box:
 
 - **OPC-UA Server**:
-  - A Pump object, with relative variables have been added to the OPC-UA server namespace for the scope of the demo scenario. Read more [here](./docs/opc-ua.md) on the setup of the OPC-UA server.
+  - A Pump object added to the OPC-UA server namespace for the scope of the demo scenario. Read more [here](./docs/opc-ua.md) on the setup of the OPC-UA server.
 - **InfluxDB v2**:
   - tokens for telegraf and Grafana created
   - bucket created
